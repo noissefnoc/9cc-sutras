@@ -34,7 +34,14 @@ root@xxxxxxxxxxxx:/mnt# make test
 としたり、`test.sh`の中間コマンドを実行することもできます。デバッグ用途などで使えるかと思います。
 
 
-変更点
------
+## 変更点
+
 
 * [dqneo/ubuntu-build-essential](https://hub.docker.com/r/dqneo/ubuntu-build-essential/) を使って非Linux環境でもビルドできるように修正
+
+
+## 元ネタ
+
+* [rui314/9cc](https://github.com/rui314/9cc) ：大元のソースコード
+* [低レイヤを知りたい人のためのCコンパイラ作成入門](https://www.sigbus.info/compilerbook/)：大元のソースコード著者による解説
+
