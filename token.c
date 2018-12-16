@@ -20,8 +20,8 @@ Vector *tokenize(char *p) {
             continue;
         }
 
-        // + or -
-        if (*p == '+' || *p == '-') {
+        // Single-letter token
+        if (strchr("+-*", *p)) {
             add_token(v, *p, p);
             i++;
             p++;
