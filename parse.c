@@ -31,7 +31,7 @@ static Node *mul() {
     for (;;) {
         Token *t = tokens->data[pos];
         int op = t->ty;
-        if (op != '*')
+        if (op != '*' && op != '/')
             return lhs;
         pos++;
         lhs = new_node(op, lhs, number());
