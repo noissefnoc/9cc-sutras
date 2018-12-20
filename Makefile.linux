@@ -6,3 +6,6 @@ OBJS=$(SRCS:.c=.o)
 	gcc -o $@ $(OBJS) $(LDFLAGS)
 
 $(OBJS): 9cc.h
+
+test: 9cc
+	./9cc -test

@@ -17,7 +17,7 @@ try() {
     fi
 }
 
-make -f Makefile.linux
+make test -f Makefile.linux
 
 try 10 'return 2*3+4;'
 try 14 'return 2+3*4;'
