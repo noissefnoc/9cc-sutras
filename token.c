@@ -2,7 +2,7 @@
 
 // Tokenizer
 static Token *add_token(Vector *v, int ty, char *input) {
-    Token *t = malloc(sizeof(Token));
+    Token *t = calloc(1, sizeof(Token));
     t->ty = ty;
     t->input = input;
     vec_push(v, t);
@@ -18,9 +18,8 @@ static struct {
 };
 
 // Tokenized input is stored to this array.
-static Vector *scan(char *p) {
+Vector *tokenize(char *p) {
     Vector *v = new_vec();
-    int i = 0;
 
     loop:
     while (*p) {
@@ -33,12 +32,11 @@ static Vector *scan(char *p) {
         // Single-letter token
         if (strchr("+-*/;=(),{}<>", *p)) {
             add_token(v, *p, p);
-            i++;
             p++;
             continue;
         }
 
-        // Multi-letter token
+        // Multi-letter symbol or keyword
         for (int i = 0; symbols[i].name; i++) {
             char *name = symbols[i].name;
             int len = strlen(name);
@@ -59,7 +57,6 @@ static Vector *scan(char *p) {
 
             Token *t = add_token(v, TK_IDENT, p);
             t->name = strndup(p, len);
-            i++;
             p += len;
             continue;
         }
@@ -67,8 +64,8 @@ static Vector *scan(char *p) {
         // Number
         if (isdigit(*p)) {
             Token *t = add_token(v, TK_NUM, p);
-            t->val = strtol(p, &p, 10);
-            i++;
+            for (; isdigit(*p); p++)
+                t->val = t->val * 10 + *p - '0';
             continue;
         }
 
@@ -78,5 +75,3 @@ static Vector *scan(char *p) {
     add_token(v, TK_EOF, p);
     return v;
 }
-
-Vector *tokenize(char *p) { return scan(p); }
