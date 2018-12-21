@@ -2,6 +2,7 @@
 *.o
 tmp*
 9cc
+a.out
 
 
 .idea
