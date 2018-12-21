@@ -30,7 +30,7 @@ Vector *tokenize(char *p) {
         }
 
         // Single-letter token
-        if (strchr("+-*/;=(),{}<>", *p)) {
+        if (strchr("+-*/;=(),{}<>[]", *p)) {
             add_token(v, *p, p);
             p++;
             continue;
