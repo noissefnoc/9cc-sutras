@@ -29,13 +29,6 @@ Vector *tokenize(char *p) {
             continue;
         }
 
-        // Single-letter token
-        if (strchr("+-*/;=(),{}<>[]", *p)) {
-            add_token(v, *p, p);
-            p++;
-            continue;
-        }
-
         // Multi-letter symbol or keyword
         for (int i = 0; symbols[i].name; i++) {
             char *name = symbols[i].name;
@@ -47,6 +40,13 @@ Vector *tokenize(char *p) {
             i++;
             p += len;
             goto loop;
+        }
+
+        // Single-letter token
+        if (strchr("+-*/;=(),{}<>[]&", *p)) {
+            add_token(v, *p, p);
+            p++;
+            continue;
         }
 
         // Identifier
