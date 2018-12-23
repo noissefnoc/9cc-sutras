@@ -11,6 +11,7 @@ IRInfo irinfo[] = {
    [IR_JMP] = {"JMP", IR_TY_JMP},
    [IR_KILL] = {"KILL", IR_TY_REG},
    [IR_LABEL] = {"", IR_TY_LABEL},
+   [IR_LABEL_ADDR] = {"LABEL_ADDR", IR_TY_LABEL_ADDR},
    [IR_LT] = {"LT", IR_TY_REG_REG},
    [IR_LOAD8] = {"LOAD8", IR_TY_REG_REG},
    [IR_LOAD32] = {"LOAD32", IR_TY_REG_REG},
@@ -35,6 +36,8 @@ static char *tostr(IR *ir) {
     switch (info.ty) {
         case IR_TY_LABEL:
             return format(".L%d:\n", ir->lhs);
+        case IR_TY_LABEL_ADDR:
+            return format("  %s r%d, %s", info.name, ir->lhs, ir->name);
         case IR_TY_IMM:
             return format("  %s %d\n", info.name, ir->lhs);
         case IR_TY_REG:
@@ -93,10 +96,17 @@ static int gen_lval(Node *node) {
     if (node->op == ND_DEREF)
         return gen_expr(node->expr);
 
-    assert(node->op == ND_LVAR);
+    if (node->op == ND_LVAR) {
+        int r = nreg++;
+        add(IR_MOV, r, 0);
+        add(IR_SUB_IMM, r, node->offset);
+        return r;
+    }
+
+    assert(node->op == ND_GVAR);
     int r = nreg++;
-    add(IR_MOV, r, 0);
-    add(IR_SUB_IMM, r, node->offset);
+    IR *ir = add(IR_LABEL_ADDR, r, -1);
+    ir->name = node->name;
     return r;
 }
 
@@ -146,6 +156,7 @@ static int gen_expr(Node *node) {
             label(y);
             return r1;
         }
+        case ND_GVAR:
         case ND_LVAR: {
             int r = gen_lval(node);
             if (node->ty->ty == CHAR)
@@ -176,7 +187,12 @@ static int gen_expr(Node *node) {
             return gen_lval(node->expr);
         case ND_DEREF: {
             int r = gen_expr(node->expr);
-            add(IR_LOAD64, r, r);
+            if (node->expr->ty->ptr_of->ty == CHAR)
+                add(IR_LOAD8, r, r);
+            else if (node->expr->ty->ptr_of->ty == INT)
+                add(IR_LOAD32, r, r);
+            else
+                add(IR_LOAD64, r, r);
             return r;
         }
         case '=': {
@@ -327,6 +343,7 @@ Vector *gen_ir(Vector *nodes) {
         fn->name = node->name;
         fn->stacksize = node->stacksize;
         fn->ir = code;
+        fn->strings = node->strings;
         vec_push(v, fn);
     }
     return v;
