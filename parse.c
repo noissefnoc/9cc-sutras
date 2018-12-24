@@ -67,7 +67,8 @@ static Node *primary() {
     if (t->ty == TK_STR) {
         node->ty = ary_of(&char_ty, strlen(t->str));
         node->op = ND_STR;
-        node->str = t->str;
+        node->data = t->str;
+        node->len = strlen(t->str) + 1;
         return node;
     }
 
@@ -320,31 +321,47 @@ static Node *compound_stmt() {
     return node;
 }
 
-static Node *function() {
-    Node *node = calloc(1, sizeof(Node));
-    node->op = ND_FUNC;
-    node->args = new_vec();
+static Node *toplevel() {
+    Type *ty = type();
+    if (!ty) {
+        Token *t = tokens->data[pos];
+        error("typename expected, but got %s", t->input);
+    }
 
     Token *t = tokens->data[pos];
-    if (t->ty != TK_INT)
-        error("function return type expected, but got %s", t->input);
-    pos++;
-
-    t = tokens->data[pos];
     if (t->ty != TK_IDENT)
-        error("function name expected, but got %s", t->input);
-    node->name = t->name;
+        error("function or variable name expected, but got %s", t->input);
+    char *name = t->name;
     pos++;
 
-    expect('(');
-    if (!consume(')')) {
-        vec_push(node->args, param());
-        while (consume(','))
+    // Function
+    if (consume('(')) {
+        Node *node = calloc(1, sizeof(Node));
+        node->op = ND_FUNC;
+        node->ty = ty;
+        node->name = name;
+        node->args = new_vec();
+
+        if (!consume(')')) {
             vec_push(node->args, param());
-        expect(')');
+            while (consume(','))
+                vec_push(node->args, param());
+            expect(')');
+        }
+
+        expect('{');
+        node->body = compound_stmt();
+        return node;
     }
-    expect('{');
-    node->body = compound_stmt();
+
+    // Global variable
+    Node *node = calloc(1, sizeof(Node));
+    node->op = ND_VARDEF;
+    node->ty = read_array(ty);
+    node->name = name;
+    node->data = calloc(1, size_of(node->ty));
+    node->len = size_of(node->ty);
+    expect(';');
     return node;
 };
 
@@ -354,6 +371,6 @@ Vector *parse(Vector *tokens_) {
 
     Vector *v = new_vec();
     while (((Token *)tokens->data[pos])->ty != TK_EOF)
-        vec_push(v, function());
+        vec_push(v, toplevel());
     return v;
 }

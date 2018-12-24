@@ -133,6 +133,10 @@ typedef struct Node {
 
     char *name;
 
+    // Global variable
+    char *data;
+    int len;
+
     // "if" ( cond ) then "else" els
     // "for" ( init; cond; inc ) body
     struct Node *cond;
@@ -171,7 +175,7 @@ typedef struct {
     int len;
 } Var;
 
-void sema(Vector *nodes);
+Vector *sema(Vector *nodes);
 
 /// gen_ir.c
 
@@ -242,7 +246,7 @@ typedef struct {
 
 extern IRInfo irinfo[];
 
-Vector *gen_ir(Vector *nodes);
+Vector *gen_ir(Vector *fns);
 void dump_ir(Vector *irv);
 
 /// regalloc.c
@@ -253,4 +257,4 @@ extern char *regs32[];
 void alloc_regs(Vector *irv);
 
 /// gen_x86.c
-void gen_x86(Vector *fns);
+void gen_x86(Vector *globals, Vector *fns);
