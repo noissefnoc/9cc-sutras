@@ -343,7 +343,7 @@ Vector *gen_ir(Vector *nodes) {
         fn->name = node->name;
         fn->stacksize = node->stacksize;
         fn->ir = code;
-        fn->strings = node->strings;
+        fn->globals = node->globals;
         vec_push(v, fn);
     }
     return v;
