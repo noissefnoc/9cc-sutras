@@ -141,6 +141,8 @@ static Node *walk(Env *env, Node *node, bool decay) {
         case '*':
         case '/':
         case '<':
+        case ND_EQ:
+        case ND_NE:
         case ND_LOGAND:
         case ND_LOGOR:
             node->lhs = walk(env, node->lhs, true);
