@@ -74,6 +74,8 @@ enum {
     TK_IF,        // "if"
     TK_ELSE,      // "else"
     TK_FOR,       // "for"
+    TK_DO,        // "do"
+    TK_WHILE,     // "while
     TK_EQ,        // ==
     TK_NE,        // !=
     TK_LOGOR,     // ||
@@ -109,6 +111,7 @@ enum {
     ND_GVAR,      // Global variable reference
     ND_IF,        // "if"
     ND_FOR,       // "for"
+    ND_DO_WHILE,  // do ~ while
     ND_EQ,        // ==
     ND_NE,        // !=
     ND_ADDR,      // address-of operator ("&")
@@ -204,6 +207,7 @@ enum {
     IR_NE,
     IR_LT,
     IR_JMP,
+    IR_IF,
     IR_UNLESS,
     IR_LOAD8,
     IR_LOAD32,
