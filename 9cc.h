@@ -69,6 +69,7 @@ enum {
     TK_NUM = 256, // Number literal
     TK_STR,       // String literal
     TK_IDENT,     // Identifier
+    TK_EXTERN,    // "extern"
     TK_INT,       // "int"
     TK_CHAR,      // "char"
     TK_IF,        // "if"
@@ -146,6 +147,7 @@ typedef struct Node {
     char *name;
 
     // Global variable
+    bool is_extern;
     char *data;
     int len;
 
@@ -183,6 +185,7 @@ typedef struct {
 
     // global
     char *name;
+    bool is_extern;
     char *data;
     int len;
 } Var;
