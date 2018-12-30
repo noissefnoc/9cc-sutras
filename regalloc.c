@@ -25,7 +25,7 @@ static int alloc(int ir_reg) {
 }
 
 static void visit(Vector *irv) {
-    // r0 is as reserved register that is always mapped to rbp.
+    // r0 is a reserved register that is always mapped to rbp.
     reg_map[0] = 0;
     used[0] = true;
 

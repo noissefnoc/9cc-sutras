@@ -48,7 +48,7 @@ static int read_string(StringBuilder *sb, char *p) {
         else if (*p == 'v')
             sb_add(sb, '\v');
         else if (*p == '\0')
-            error("premature end of input");
+            error("PREMATURE end of input");
         else
             sb_add(sb, *p);
         p++;
@@ -62,7 +62,7 @@ Vector *tokenize(char *p) {
 
     loop:
     while (*p) {
-        // Slip whitespace
+        // Skip whitespace
         if (isspace(*p)) {
             p++;
             continue;
@@ -88,7 +88,6 @@ Vector *tokenize(char *p) {
                 continue;
 
             add_token(v, symbols[i].ty, p);
-            i++;
             p += len;
             goto loop;
         }

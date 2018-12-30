@@ -116,15 +116,12 @@ static Node *postfix() {
 }
 
 static Node *unary() {
-    if (consume('*')) {
+    if (consume('*'))
         return new_expr(ND_DEREF, mul());
-    }
-    if (consume('&')) {
+    if (consume('&'))
         return new_expr(ND_ADDR, mul());
-    }
-    if (consume(TK_SIZEOF)) {
+    if (consume(TK_SIZEOF))
         return new_expr(ND_SIZEOF, unary());
-    }
     return postfix();
 }
 
@@ -139,7 +136,7 @@ static Node *mul() {
     }
 }
 
-Node *add() {
+static Node *add() {
     Node *lhs = mul();
     for (;;) {
         Token *t = tokens->data[pos];
@@ -247,7 +244,7 @@ static Node *decl() {
     Node *node = calloc(1, sizeof(Node));
     node->op = ND_VARDEF;
 
-    // Read the first half of type name (e.g. `int *`)
+    // Read the first half of type name (e.g. `int *`).
     node->ty = type();
 
     // Read an identifier.

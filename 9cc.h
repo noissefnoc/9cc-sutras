@@ -76,7 +76,7 @@ enum {
     TK_ELSE,      // "else"
     TK_FOR,       // "for"
     TK_DO,        // "do"
-    TK_WHILE,     // "while
+    TK_WHILE,     // "while"
     TK_EQ,        // ==
     TK_NE,        // !=
     TK_LOGOR,     // ||
@@ -113,10 +113,10 @@ enum {
     ND_IF,        // "if"
     ND_FOR,       // "for"
     ND_DO_WHILE,  // do ~ while
-    ND_EQ,        // ==
-    ND_NE,        // !=
     ND_ADDR,      // address-of operator ("&")
     ND_DEREF,     // pointer dereference ("*")
+    ND_EQ,        // ==
+    ND_NE,        // !=
     ND_LOGAND,    // &&
     ND_LOGOR,     // ||
     ND_RETURN,    // "return"
@@ -141,8 +141,7 @@ typedef struct Node {
     struct Node *lhs;  // left-hand side
     struct Node *rhs;  // right-hand side
     int val;           // Number literal
-    char *str;         // String literal
-    struct Node *expr; // "return" or expression stmt
+    struct Node *expr; // "return" or expresson stmt
     struct Node *stmt; // Statement expression
     Vector *stmts;     // Compound statement
 

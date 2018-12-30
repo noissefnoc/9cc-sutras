@@ -10,9 +10,9 @@ static char *escape(char *s, int len) {
     char *buf = malloc(len * 4);
     char *p = buf;
     for (int i = 0; i < len; i++) {
-        if (s[i] == '\\') {
+        if (s[i] == '\\' || s[i] == '"') {
             *p++ = '\\';
-            *p++ = '\\';
+            *p++ = s[i];
         } else if (isgraph(s[i]) || s[i] == ' ') {
             *p++ = s[i];
         } else {
@@ -84,7 +84,7 @@ void gen(Function *fn) {
                 emit_cmp(ir, "sete");
                 break;
             case IR_NE:
-                emit_cmp(ir, "setl");
+                emit_cmp(ir, "setne");
                 break;
             case IR_LT:
                 emit_cmp(ir, "setl");
@@ -112,7 +112,6 @@ void gen(Function *fn) {
                 break;
             case IR_STORE8:
                 printf("  mov [%s], %s\n", regs[ir->lhs], regs8[ir->rhs]);
-                break;
             case IR_STORE32:
                 printf("  mov [%s], %s\n", regs[ir->lhs], regs32[ir->rhs]);
                 break;
